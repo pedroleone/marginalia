@@ -51,6 +51,14 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "rubocop", "~> 1.80"
+  gem "rubocop-rails", "~> 2.33"
+
+  gem "syntax_tree", "~> 6.3"
+
+  gem "erb-formatter", "~> 0.7.3"
+  gem "erb_lint", "~> 0.9.0"
 end
 
 group :development do
@@ -63,11 +71,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
-gem "rubocop", "~> 1.80", groups: [:development, :test]
-gem "rubocop-rails", "~> 2.33", groups: [:development, :test]
-
-gem "syntax_tree", "~> 6.3", groups: [:development, :test]
-
-gem "erb-formatter", "~> 0.7.3", groups: [:development, :test]
-gem "erb_lint", "~> 0.9.0", groups: [:development, :test]
