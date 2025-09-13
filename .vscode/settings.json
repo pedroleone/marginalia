@@ -1,0 +1,31 @@
+{
+  // Ruby LSP
+  "rubyLsp.rubyVersionManager": {
+    "type": "mise",
+  },          // or "auto" if you prefer auto-detect
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.semanticHighlighting.enabled": true
+  },
+
+  // ERB files
+  "[erb]": {
+    "editor.defaultFormatter": "elia.erb-formatter",
+    "editor.formatOnSave": true
+  },
+
+  // Tailwind in ERB/HTML-Rails templates
+  "tailwindCSS.includeLanguages": {
+    "erb": "html",
+    "html.erb": "html"
+  },
+  // (Optional) verbose tracing if Tailwind IntelliSense ever seems quiet:
+  // "tailwindCSS.trace.server": "messages",
+
+  // SQLite: show DB explorer in sidebar (from alexcvzz.vscode-sqlite)
+  "sqlite.showExplorer": true
+}

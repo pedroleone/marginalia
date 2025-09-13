@@ -1,0 +1,5 @@
+linters:
+  Rubocop:
+    enabled: true
+  SpaceAroundErbTag:
+    enabled: true
