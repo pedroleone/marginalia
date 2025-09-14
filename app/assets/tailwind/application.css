@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* Tell Tailwind where to scan for class names */
+@source "../../../public/*.html";
+@source "../../../app/helpers/**/*.rb";
+@source "../../../app/javascript/**/*.js";
+@source "../../../app/views/**/*";
+
+/* Activate daisyUI (no bundler) */
+@plugin "./daisyui.js";
