@@ -1,0 +1,20 @@
+<% flash.each do |key, message| %>
+  <% next if message.blank? %>
+
+  <% klass =
+      case key.to_sym
+      when :notice, :success
+        "bg-green-50 text-green-700 border-green-200"
+      when :alert, :error
+        "bg-red-50 text-red-600 border-red-200"
+      else
+        "bg-blue-50 text-blue-700 border-blue-200"
+      end %>
+
+  <div class="mx-auto md:w-2/3 w-full">
+    <div class="my-4 rounded-lg border px-4 py-3 font-medium <%= klass %>"
+         role="status" aria-live="polite">
+      <%= message.is_a?(Array) ? safe_join(message, tag.br) : message %>
+    </div>
+  </div>
+<% end %>
