@@ -29,6 +29,12 @@
 
   <body>
     <main class="container mx-auto px-5 flex">
+      <% if authenticated? %>
+        <%= button_to "Sign out", session_path, method: :delete, data: { turbo: true } %>
+      <% else %>
+        <%= link_to "Sign in", new_session_path %>
+      <% end %>
+
       <%= yield %>
     </main>
   </body>
