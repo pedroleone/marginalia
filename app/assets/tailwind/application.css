@@ -7,4 +7,17 @@
 @source "../../../app/views/**/*";
 
 /* Activate daisyUI (no bundler) */
-@plugin "./daisyui.js";
+@plugin "./daisyui.js" {
+  themes: garden --default;
+}
+
+@layer base {
+  body {
+    font-family: 'Crimson Pro', serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+  }
+}
