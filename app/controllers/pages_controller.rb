@@ -1,7 +1,14 @@
 class PagesController < ApplicationController
-    allow_unauthenticated_access only: :home
-  def home
-    @name = "Pedro Leone"
+    allow_unauthenticated_access only: :index
+
+    def index
+      if authenticated?
+        redirect_to home_path
+      else
+        render :index
+      end
+    end
+    def home
     @library = {
       books: [
         {

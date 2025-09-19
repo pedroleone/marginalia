@@ -1,6 +1,6 @@
 <div class="container mx-auto px-6 pb-10">
   <h1 class="text-4xl mb-8">Hello,
-    <%= @name || "Pedro" %>.</h1>
+    <%= Current.session.user.email_address || "User" %>.</h1>
 
   <h2 class="text-2xl mb-6">You are reading the following books:</h2>
 

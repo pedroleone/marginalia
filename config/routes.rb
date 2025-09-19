@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  root "pages#home"
+  root "pages#index"
+  get "home", to: "pages#home"
+
 
   get  "signup", to: "registrations#new"
   post "signup", to: "registrations#create"
