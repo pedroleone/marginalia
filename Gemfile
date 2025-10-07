@@ -52,7 +52,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem "rubocop", "~> 1.80"
+  gem "rubocop", "~> 1.81"
   gem "rubocop-rails", "~> 2.33"
 
   gem "syntax_tree", "~> 6.3"
