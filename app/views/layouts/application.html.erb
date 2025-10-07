@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Lorekeeper" %></title>
+    <title><%= content_for(:title) || "Marginalia" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -29,11 +29,17 @@
 
   <body class="min-h-screen">
     <!-- Navbar -->
-    <header class="">
-      <div class="container mx-auto px-5 h-14 flex items-center justify-between">
-        <%= link_to "Marginalia", root_path, class: "font-semibold tracking-tight" %>
-
-        <nav class="flex items-center gap-4">
+    <header>
+      <div class="container mx-auto px-5 h-16 flex items-center justify-between">
+        <!-- Logo + Brand -->
+        <%= link_to root_path, class: "flex items-center gap-2 hover:opacity-80 transition" do %>
+          <%= image_tag "logo.png", alt: "Logo", class: "h-10 w-10" %>
+          <span class="text-lg font-semibold tracking-tight text-slate-700">
+            Marginalia
+          </span>
+        <% end %>
+        <!-- Navigation -->
+        <nav class="flex items-center gap-3">
           <% if authenticated? %>
             <%= button_to "Sign out",
             session_path,
@@ -45,16 +51,16 @@
               },
             },
             class:
-              "text-sm rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-900" %>
+              "text-sm rounded-md px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 transition" %>
           <% else %>
             <%= link_to "Sign in",
             new_session_path,
-            class: "text-sm text-blue-600 hover:underline" %>
+            class: "text-sm text-gray-600 hover:text-gray-900 transition" %>
 
             <%= link_to "Sign up",
             signup_path,
             class:
-              "text-sm rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white" %>
+              "text-sm rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white transition" %>
           <% end %>
         </nav>
       </div>
