@@ -1,208 +1,222 @@
-<main>
+<main class="bg-gradient-to-br from-slate-50 via-white to-slate-100">
   <!-- Hero Section -->
-  <section class="py-20 text-center md:py-32">
-    <div class="container mx-auto px-4">
-      <h1 class="text-4xl font-bold tracking-tighter text-slate-900 md:text-6xl">
-        A private workspace for your reading life.
-      </h1>
-      <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-        Marginalia is a quiet, fast app to log what you’re reading, capture
-        thoughts as they happen, and get recommendations grounded in your own
-        words.
-      </p>
-      <div class="mt-8 flex justify-center gap-4">
-        <%= link_to "Start Your Journal",
-        signup_path,
-        class:
-          "rounded-full bg-sky-500 px-8 py-3 text-lg font-semibold text-white transition
-                            hover:bg-sky-600" %>
+  <section class="relative overflow-hidden py-20 sm:py-28">
+    <div class="absolute inset-y-0 right-0 hidden w-1/2 bg-gradient-to-l from-sky-100/60 via-white to-transparent md:block"></div>
+    <div class="container relative mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-2">
+      <div class="text-center md:text-left">
+        <span class="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white/80 px-4 py-1 text-sm font-medium uppercase tracking-wide text-sky-600 shadow-sm">
+          Quiet tools for avid readers
+        </span>
+        <h1 class="mt-6 text-4xl font-semibold tracking-tight text-slate-900 md:text-6xl">
+          A private workspace for your reading life.
+        </h1>
+        <p class="mt-6 text-lg leading-relaxed text-slate-600 md:max-w-xl">
+          Marginalia is a quiet, fast app to log what you’re reading, capture thoughts as they happen, and get recommendations grounded in your own words.
+        </p>
+        <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-start md:items-center">
+          <%= link_to "Start Your Journal",
+          signup_path,
+          class:
+            "w-full rounded-full bg-sky-600 px-8 py-3 text-center text-lg font-semibold text-white shadow-lg shadow-sky-600/30 transition hover:bg-sky-700 sm:w-auto" %>
+          <p class="text-sm text-slate-500">
+            No public feed, just your library.
+          </p>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="mx-auto max-w-md rounded-3xl bg-white p-8 shadow-xl shadow-slate-900/10 ring-1 ring-slate-200">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-medium uppercase tracking-widest text-slate-400">
+              Currently Reading
+            </span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+              Private
+            </span>
+          </div>
+          <div class="mt-6 space-y-6">
+            <div>
+              <p class="text-sm font-semibold text-slate-700">
+                A private workspace for your reading life.
+              </p>
+              <p class="mt-2 text-sm text-slate-500">
+                Thoughts captured on page 112 — “Marginal notes become the map back to the text.”
+              </p>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-700">
+                Log your progress in two seconds.
+              </p>
+              <p class="mt-2 text-sm text-slate-500">
+                Update your page number, add a quick note, and keep reading without losing the thread.
+              </p>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-700">
+                A timeline of your thoughts.
+              </p>
+              <p class="mt-2 text-sm text-slate-500">
+                Your notes and quotes, organized chronologically with context.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
   <!-- Feature Showcase -->
-  <section id="features" class="bg-slate-50 py-20">
-    <div class="container mx-auto px-4">
-      <div class="mx-auto mb-16 max-w-3xl text-center" 						bis_skin_checked="1">
-        <h2 class="text-3xl font-bold tracking-tight text-slate-900">
+  <section id="features" class="py-16 sm:py-20">
+    <div class="container mx-auto max-w-5xl px-4">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2 class="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
           For reflection, not for an audience.
         </h2>
-        <p class="mt-4 text-lg text-slate-600">
-          Unlike social reading apps, Marginalia is designed to be your private
-          space. Fast, focused, and built to deepen your understanding of what
-          you read.
+        <p class="mt-4 text-lg leading-relaxed text-slate-600">
+          Unlike social reading apps, Marginalia is designed to be your private space. Fast, focused, and built to deepen your understanding of what you read.
         </p>
       </div>
 
-      <div class="grid gap-10 md:grid-cols-3">
+      <div class="mt-16 grid gap-8 md:grid-cols-3">
         <!-- Feature 1 -->
-        <div class="text-center">
-          <div
-            class="
-              mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-100
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-sky-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-              />
+        <div class="flex flex-col rounded-2xl border border-slate-200 bg-white/80 p-8 text-center shadow-sm transition hover:shadow-lg">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
           </div>
-          <h3 class="mt-4 text-lg font-bold text-slate-900">
-            Event-Level Memory
-          </h3>
-          <p class="mt-2 text-slate-600">
-            Capture thoughts, quotes, and sentiments as you read. Build a rich
-            journal for each book, not just a single rating at the end.
+          <h3 class="mt-6 text-xl font-semibold text-slate-900">Event-Level Memory</h3>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">
+            Capture thoughts, quotes, and sentiments as you read. Build a rich journal for each book, not just a single rating at the end.
           </p>
         </div>
         <!-- Feature 2 -->
-        <div class="text-center">
-          <div
-            class="
-              mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-100
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-sky-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-              />
+        <div class="flex flex-col rounded-2xl border border-slate-200 bg-white/80 p-8 text-center shadow-sm transition hover:shadow-lg">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
             </svg>
           </div>
-          <h3 class="mt-4 text-lg font-bold text-slate-900">
-            The Signal Engine
-          </h3>
-          <p class="mt-2 text-slate-600">
-            Get AI-powered recommendations explained with your own words. "You
-            might like this because you loved the 'moral ambiguity' in that."
+          <h3 class="mt-6 text-xl font-semibold text-slate-900">The Signal Engine</h3>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">
+            Get AI-powered recommendations explained with your own words. "You might like this because you loved the 'moral ambiguity' in that."
           </p>
         </div>
         <!-- Feature 3 -->
-        <div class="text-center">
-          <div
-            class="
-              mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-100
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-sky-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-              />
+        <div class="flex flex-col rounded-2xl border border-slate-200 bg-white/80 p-8 text-center shadow-sm transition hover:shadow-lg">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
           </div>
-          <h3 class="mt-4 text-lg font-bold text-slate-900">
-            Own Your Data
-          </h3>
-          <p class="mt-2 text-slate-600">
-            Export your entire library, including every note and quote, at any
-            time. No lock-in.
+          <h3 class="mt-6 text-xl font-semibold text-slate-900">Own Your Data</h3>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">
+            Export your entire library, including every note and quote, at any time. No lock-in.
           </p>
         </div>
       </div>
     </div>
   </section>
+
   <!-- How it Works Section -->
   <section class="py-20">
-    <div class="container mx-auto grid items-center gap-12 px-4 md:grid-cols-2">
-      <div>
-        <span class="font-bold text-sky-500">FRICTIONLESS CAPTURE</span>
-        <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+    <div class="container mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-2">
+      <div class="relative order-2 overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-slate-900/10 ring-1 ring-slate-200 md:order-1">
+        <div class="rounded-2xl bg-slate-900 p-6 text-slate-200">
+          <div class="flex items-center justify-between text-xs uppercase tracking-widest text-slate-400">
+            <span>Frictionless Capture</span>
+            <span>Dashboard</span>
+          </div>
+          <div class="mt-6 space-y-4">
+            <div class="rounded-xl bg-white/10 p-4">
+              <p class="text-sm font-semibold text-white">
+                Log your progress in two seconds.
+              </p>
+              <p class="mt-2 text-sm text-slate-300">
+                The dashboard is designed for speed. Update your page number, add a quick note, and get back to reading. The interface gets out of your way so you can stay in the flow.
+              </p>
+            </div>
+            <img src="https://placehold.co/600x400/e2e8f0/475569?text=App+Dashboard+Mockup" alt="Marginalia dashboard showing currently reading books" class="w-full rounded-xl border border-white/10 object-cover shadow-lg" />
+          </div>
+        </div>
+      </div>
+      <div class="order-1 space-y-6 text-left md:order-2">
+        <span class="text-sm font-semibold uppercase tracking-widest text-sky-500">
+          Frictionless Capture
+        </span>
+        <h2 class="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
           Log your progress in two seconds.
         </h2>
-        <p class="mt-4 text-lg text-slate-600">
-          The dashboard is designed for speed. Update your page number, add a
-          quick note, and get back to reading. The interface gets out of your
-          way so you can stay in the flow.
+        <p class="text-lg leading-relaxed text-slate-600">
+          The dashboard is designed for speed. Update your page number, add a quick note, and get back to reading. The interface gets out of your way so you can stay in the flow.
         </p>
-      </div>
-      <div class="rounded-lg bg-slate-100 p-8 shadow-lg">
-        <!-- Placeholder for an app screenshot -->
-        <img
-          src="https://placehold.co/600x400/e2e8f0/475569?text=App+Dashboard+Mockup"
-          alt="Marginalia dashboard showing currently reading books"
-          class="rounded-md"
-        />
       </div>
     </div>
   </section>
 
   <section class="py-20">
-    <div class="container mx-auto grid items-center gap-12 px-4 md:grid-cols-2">
-      <div class="md:order-2">
-        <span class="font-bold text-sky-500">YOUR PERSONAL ARCHIVE</span>
-        <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+    <div class="container mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-2">
+      <div class="space-y-6 text-left">
+        <span class="text-sm font-semibold uppercase tracking-widest text-sky-500">
+          Your Personal Archive
+        </span>
+        <h2 class="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
           A timeline of your thoughts.
         </h2>
-        <p class="mt-4 text-lg text-slate-600">
-          Every book becomes a rich journal. Revisit what mattered most with a
-          clean, chronological view of your notes and quotes, complete with
-          page numbers. Rediscover your insights months or years later.
+        <p class="text-lg leading-relaxed text-slate-600">
+          Every book becomes a rich journal. Revisit what mattered most with a clean, chronological view of your notes and quotes, complete with page numbers. Rediscover your insights months or years later.
         </p>
       </div>
-      <div class="rounded-lg bg-slate-100 p-8 shadow-lg md:order-1">
-        <!-- Placeholder for an app screenshot -->
-        <img
-          src="https://placehold.co/600x400/e2e8f0/475569?text=Book+Journal+Mockup"
-          alt="Marginalia book journal showing a timeline of notes"
-          class="rounded-md"
-        />
+      <div class="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-slate-900/10 ring-1 ring-slate-200">
+        <div class="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-100 p-6">
+          <div class="flex items-center justify-between text-xs uppercase tracking-widest text-slate-400">
+            <span>Your Personal Archive</span>
+            <span>Timeline</span>
+          </div>
+          <div class="mt-6 space-y-6">
+            <div class="flex gap-4 rounded-xl bg-white p-4 shadow-sm">
+              <span class="text-xs font-semibold uppercase tracking-wide text-sky-500">Today</span>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">
+                  A timeline of your thoughts.
+                </p>
+                <p class="mt-2 text-sm text-slate-500">
+                  Every book becomes a rich journal. Revisit what mattered most with a clean, chronological view.
+                </p>
+              </div>
+            </div>
+            <img src="https://placehold.co/600x400/e2e8f0/475569?text=Book+Journal+Mockup" alt="Marginalia book journal showing a timeline of notes" class="w-full rounded-xl border border-slate-200 object-cover shadow-md" />
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
   <!-- Final CTA -->
-  <section class="bg-slate-900 py-20">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-white">
+  <section class="relative overflow-hidden bg-slate-900 py-20">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950"></div>
+    <div class="container relative mx-auto max-w-4xl px-4 text-center">
+      <h2 class="text-3xl font-semibold tracking-tight text-white md:text-4xl">
         Start your private reading journal today.
       </h2>
-      <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-        Rediscover the joy of reading for yourself. Import your library and
-        begin capturing what truly matters.
+      <p class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-slate-300">
+        Rediscover the joy of reading for yourself. Import your library and begin capturing what truly matters.
       </p>
-      <div class="mt-8">
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <%= link_to "Get Started for Free",
         signup_path,
         class:
-          "rounded-full bg-sky-500 px-8 py-3 text-lg font-semibold text-white transition
-                            hover:bg-sky-600" %>
+          "w-full rounded-full bg-sky-500 px-8 py-3 text-lg font-semibold text-white shadow-xl shadow-sky-500/40 transition hover:bg-sky-400 sm:w-auto" %>
+        <p class="text-sm text-slate-400">
+          Create your first entry in minutes.
+        </p>
       </div>
     </div>
   </section>
 </main>
+
 <!-- Footer -->
-<footer>
-  <div
-    class="
-      container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-8
-      md:flex-row
-    "
-  >
+<footer class="bg-white">
+  <div class="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-8 md:flex-row">
     <div class="flex items-center gap-2">
       <%= image_tag "logo.png", alt: "Logo", class: "h-6 w-6" %>
       <p class="text-sm text-slate-600">
@@ -210,9 +224,9 @@
       </p>
     </div>
     <div class="flex gap-4 text-sm text-slate-600">
-      <a href="#" class="hover:text-sky-500">Privacy</a>
-      <a href="#" class="hover:text-sky-500">Terms</a>
-      <a href="#" class="hover:text-sky-500">Contact</a>
+      <a href="#" class="transition hover:text-sky-600">Privacy</a>
+      <a href="#" class="transition hover:text-sky-600">Terms</a>
+      <a href="#" class="transition hover:text-sky-600">Contact</a>
     </div>
   </div>
 </footer>

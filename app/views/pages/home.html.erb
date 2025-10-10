@@ -1,166 +1,256 @@
-<div class="container mx-auto px-6 pb-10">
-  <h1 class="text-4xl mb-8">Hello,
-    <%= Current.session.user.email_address || "User" %>.</h1>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pb-16">
+  <% total_books = @library[:books].size %>
+  <% categories = @library[:books].map { |book| book[:category] }.compact.uniq %>
+  <% reading_methods = @library[:books].map { |book| book[:reading_method].to_s.capitalize }.uniq %>
+  <% tags = @library[:books].flat_map { |book| book[:tags] }.compact.uniq %>
+  <% completion_values = @library[:books].map do |book|
+    percent = book[:progress][:percent]
+    if percent
+      percent.to_f
+    else
+      current_page = book[:progress][:current_page].to_f
+      total_pages = book[:progress][:total_pages].to_f
+      total_pages.positive? ? (current_page / total_pages * 100) : 0.0
+    end
+  end %>
+  <% average_completion = completion_values.empty? ? 0 : (completion_values.sum / completion_values.size).round %>
 
-  <h2 class="text-2xl mb-6">You are reading the following books:</h2>
-
-  <div class="space-y-8">
-    <% @library[:books].each do |book| %>
-      <div class="card bg-base-100 shadow-md lg:card-side">
-        <!-- Cover -->
-        <figure class="lg:w-1/4">
-          <img
-            src="<%= book[:cover_url] %>"
-            alt="<%= "#{book[:title]} cover" %>"
-            class="h-full w-full object-cover"
-          />
-        </figure>
-        <!-- Content -->
-        <div class="card-body lg:w-2/3 gap-3">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h3 class="text-xl leading-tight"><%= book[:title] %></h3>
-              <p class="opacity-70 text-sm"><%= book[:author] %></p>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="badge badge-outline"><%= book[:category] %></span>
-              <span class="badge badge-outline"><%= book[:reading_method].to_s.capitalize %></span>
-            </div>
-          </div>
-          <!-- Tags -->
-          <div class="flex flex-wrap gap-2">
-            <% book[:tags].each do |tag| %>
-              <span class="badge badge-ghost"><%= tag %></span>
-            <% end %>
-          </div>
-          <!-- Pace phrase -->
-          <p class="italic opacity-80"><%= book[:pace_phrase] %></p>
-          <!-- Progress -->
-          <% current_page = book[:progress][:current_page]
-          total_pages = book[:progress][:total_pages]
-          percent =
-            (book[:progress][:percent] || (current_page.to_f / total_pages * 100)).round %>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-sm">
-              <span>Progress:
-                <strong><%= current_page %></strong>/<%= total_pages %>
-                pages</span>
-              <span class="opacity-70"><%= percent %>%</span>
-            </div>
-            <progress
-              class="progress progress-primary w-full"
-              value="<%= percent %>"
-              max="100"
-            ></progress>
-          </div>
-          <!-- Update section (note + sentiment + page) -->
-          <form class="mt-2 space-y-2">
-            <!-- Quick note -->
-            <label class="form-control w-full">
-              <div class="label justify-between">
-                <span class="label-text">Quick note (optional)</span>
-                <span class="label-text-alt opacity-70">Max 200 chars</span>
-              </div>
-              <textarea
-                class="
-                  textarea textarea-bordered textarea-sm w-full min-h-24 resize-y
-                "
-                rows="3"
-                maxlength="200"
-                placeholder="A sentence about how it's going…"
-              ></textarea>
-            </label>
-            <!-- Semantic feedback -->
-            <div class="mt-2">
-              <div class="label"><span class="label-text">How’s it going?</span></div>
-              <div class="join join-vertical sm:join-horizontal">
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Boring"
-                  value="boring"
-                />
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Meh"
-                  value="meh"
-                />
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Good"
-                  value="good"
-                />
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Interesting"
-                  value="interesting"
-                />
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Gripping"
-                  value="gripping"
-                />
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Thought-provoking"
-                  value="thought-provoking"
-                />
-                <input
-                  class="btn btn-sm join-item"
-                  type="radio"
-                  name="sentiment_<%= book[:id] %>"
-                  aria-label="Moving"
-                  value="moving"
-                />
-              </div>
-            </div>
-            <!-- Page input -->
-            <label class="form-control">
-              <div class="label">
-                <span class="label-text">Page</span>
-                <span class="label-text-alt opacity-70">current</span>
-              </div>
-              <div class="join">
-                <input
-                  type="number"
-                  class="input input-sm input-bordered w-24 join-item"
-                  min="1"
-                  max="<%= total_pages %>"
-                  placeholder="<%= current_page %>"
-                >
-                <span class="btn btn-sm join-item">/
-                  <%= total_pages %></span>
-              </div>
-            </label>
-            <!-- Actions -->
-            <div class="flex flex-wrap items-center gap-3 mt-2">
-              <button class="btn btn-sm btn-primary">Save update</button>
-              <div class="flex-1"></div>
-              <button class="btn btn-sm btn-success">Finished reading</button>
-              <button class="btn btn-sm btn-error btn-outline">Dropped the book</button>
-            </div>
-          </form>
-          <!-- Meta -->
-          <div class="text-sm opacity-80">
-            <p>Days reading the book:
-              <strong><%= book[:days_reading] %></strong></p>
-            <p>Estimated time to finish it:
-              <strong><%= book[:estimated_days_to_finish] %>
-                days</strong></p>
-          </div>
+  <div class="container mx-auto max-w-6xl px-6 pt-12">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="w-full lg:max-w-3xl">
+        <p class="text-sm font-semibold uppercase tracking-widest text-sky-500">
+          Good to see you
+        </p>
+        <h1 class="mt-2 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
+          Hello, <%= Current.session.user.email_address || "Reader" %>.
+        </h1>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
+          Slip in, jot a thought, and keep turning pages. Everything here is designed to respect your time and attention.
+        </p>
+      </div>
+      <div class="w-full rounded-2xl border border-slate-200 bg-white/70 p-5 text-sm text-slate-600 shadow-sm backdrop-blur lg:max-w-md">
+        <div class="flex items-center gap-3">
+          <span class="rounded-full bg-slate-900/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+            Reading snapshot
+          </span>
+          <p class="text-slate-500">A quiet overview of where you are right now.</p>
+        </div>
+        <div class="mt-4 space-y-3 text-slate-500">
+          <p>
+            <strong class="text-slate-800"><%= total_books %></strong>
+            <%= total_books == 1 ? "book" : "books" %> in progress,
+            averaging <strong class="text-slate-800"><%= average_completion %>%</strong> complete.
+          </p>
+          <% if categories.any? %>
+            <p>
+              Exploring
+              <strong class="text-slate-800"><%= categories.size %></strong>
+              <%= categories.size == 1 ? "category" : "categories" %>:
+              <%= categories.first(3).join(", ") %>
+              <% if categories.size > 3 %>
+                &hellip;
+              <% end %>
+            </p>
+          <% end %>
+          <% if reading_methods.any? %>
+            <p>
+              Formats on your desk:
+              <%= reading_methods.join(" · ") %>
+            </p>
+          <% end %>
+          <% if tags.any? %>
+            <p>
+              Themes you’re tracking:
+              <%= tags.first(4).join(", ") %>
+              <% if tags.size > 4 %>
+                &hellip;
+              <% end %>
+            </p>
+          <% end %>
         </div>
       </div>
-    <% end %>
+    </div>
+
+    <div class="mt-12 grid gap-10">
+      <% @library[:books].each do |book| %>
+        <% current_page = book[:progress][:current_page]
+        total_pages = book[:progress][:total_pages]
+        percent =
+          (book[:progress][:percent] || (current_page.to_f / total_pages * 100)).round
+        tags = Array(book[:tags]).compact %>
+
+        <article class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 ring-1 ring-slate-200">
+          <div class="space-y-10 p-6 md:p-8">
+            <div class="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+              <!-- Summary -->
+              <div class="flex flex-col gap-6 md:flex-row md:items-start">
+                <div class="w-full max-w-[180px] overflow-hidden rounded-2xl shadow-lg shadow-slate-900/10">
+                  <div class="aspect-[2/3]">
+                    <img src="<%= book[:cover_url] %>" alt="<%= "#{book[:title]} cover" %>" class="h-full w-full object-cover object-center" />
+                  </div>
+                </div>
+
+                <div class="flex-1 space-y-5">
+                  <div class="space-y-2">
+                    <h2 class="text-2xl font-semibold leading-tight text-slate-900 md:text-3xl">
+                      <%= book[:title] %>
+                    </h2>
+                    <p class="text-sm uppercase tracking-wide text-slate-500">
+                      <%= book[:author] %>
+                    </p>
+                  </div>
+
+                  <p class="text-base italic text-slate-600 md:text-lg">
+                    <%= book[:pace_phrase] %>
+                  </p>
+
+                  <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex items-center rounded-full bg-slate-900/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                      <%= book[:category] %>
+                    </span>
+                    <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <%= book[:reading_method].to_s.capitalize %>
+                    </span>
+                  </div>
+
+                  <% if tags.any? %>
+                    <% visible_tags = tags.first(3) %>
+                    <% remaining_count = tags.size - visible_tags.size %>
+                    <p class="text-sm text-slate-500" title="<%= tags.join(', ') %>">
+                      Themes:
+                      <span class="font-medium text-slate-600"><%= visible_tags.join(", ") %></span>
+                      <% if remaining_count.positive? %>
+                        <span class="text-slate-400">(+<%= remaining_count %> more)</span>
+                      <% end %>
+                    </p>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Progress + stats -->
+              <div class="flex flex-col gap-6">
+                <section class="rounded-2xl bg-slate-50/80 p-6 shadow-inner shadow-white/60">
+                  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p class="text-sm uppercase tracking-wide text-slate-500">Progress</p>
+                      <p class="text-2xl font-semibold text-slate-900">
+                        <%= current_page %>
+                        <span class="text-base font-normal text-slate-400">/ <%= total_pages %> pages</span>
+                      </p>
+                    </div>
+                    <div class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">
+                      <%= percent %>% complete
+                    </div>
+                  </div>
+                  <div class="mt-4 h-2 rounded-full bg-slate-200">
+                    <div class="h-full rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-sky-600 transition-all" style="width: <%= percent %>%"></div>
+                  </div>
+                </section>
+
+                <section class="grid gap-4 rounded-2xl border border-slate-100 bg-white/70 p-6 shadow-sm sm:grid-cols-2">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">
+                      Days with this book
+                    </p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900"><%= book[:days_reading] %></p>
+                    <p class="text-sm text-slate-500">
+                      Steady momentum makes the story stick.
+                    </p>
+                  </div>
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">
+                      Estimated finish
+                    </p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900"><%= book[:estimated_days_to_finish] %> days</p>
+                    <p class="text-sm text-slate-500">
+                      Keep your pace or adjust as needed.
+                    </p>
+                  </div>
+                </section>
+              </div>
+            </div>
+
+
+            <!-- Update section -->
+            <section class="rounded-2xl border border-slate-100 bg-white/70 p-6 shadow-sm">
+              <header class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p class="text-sm uppercase tracking-wide text-sky-500">
+                    Quick capture
+                  </p>
+                  <h3 class="text-lg font-semibold text-slate-900">
+                    Log today’s progress
+                  </h3>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                  <span>Estimated finish ·</span>
+                  <span><%= book[:estimated_days_to_finish] %> days</span>
+                </div>
+              </header>
+
+              <form class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr),320px]">
+                <div class="space-y-6">
+                  <!-- Note -->
+                  <div>
+                    <label for="note_<%= book[:id] %>" class="flex items-center justify-between text-sm font-medium text-slate-700">
+                      <span>Quick note</span>
+                      <span class="text-slate-400">Optional · 200 chars max</span>
+                    </label>
+                    <div class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
+                      <textarea id="note_<%= book[:id] %>" rows="3" maxlength="200" placeholder="A sentence about how it's going…" class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Sentiment -->
+                  <div>
+                    <p class="text-sm font-medium text-slate-700">How’s it going?</p>
+                    <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                      <% sentiments = [
+                        ["boring", "Boring"],
+                        ["meh", "Meh"],
+                        ["good", "Good"],
+                        ["interesting", "Interesting"],
+                        ["gripping", "Gripping"],
+                        ["thought-provoking", "Thought-provoking"],
+                        ["moving", "Moving"]
+                      ] %>
+                      <% sentiments.each do |value, label| %>
+                        <label class="group flex cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition hover:border-sky-200 hover:bg-sky-50">
+                          <span><%= label %></span>
+                          <input type="radio" name="sentiment_<%= book[:id] %>" value="<%= value %>" class="hidden peer" />
+                          <span class="hidden rounded-full bg-sky-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline group-hover:inline-flex">Selected</span>
+                        </label>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quick actions -->
+                <div class="flex flex-col gap-5 rounded-2xl bg-slate-900/95 p-6 text-slate-200 shadow-lg shadow-slate-900/20">
+                  <div class="space-y-3">
+                    <label for="page_<%= book[:id] %>" class="text-sm font-medium text-slate-200">Current page</label>
+                    <div class="flex items-center gap-3 rounded-2xl bg-slate-800/70 px-4 py-3">
+                      <input type="number" id="page_<%= book[:id] %>" min="1" max="<%= total_pages %>" placeholder="<%= current_page %>" class="flex-1 border-0 bg-transparent text-lg font-semibold text-white placeholder:text-slate-500 focus:outline-none focus:ring-0" />
+                      <span class="text-sm uppercase tracking-wide text-slate-400">of <%= total_pages %></span>
+                    </div>
+                  </div>
+                  <div class="grid gap-3">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-sky-500/40 transition hover:bg-sky-400">
+                      Save update
+                    </button>
+                    <button type="button" class="inline-flex items-center justify-center rounded-full bg-emerald-500/10 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-emerald-300 transition hover:bg-emerald-500/20 hover:text-emerald-200">
+                      Finished reading
+                    </button>
+                    <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-700 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-slate-300 transition hover:border-slate-500 hover:text-white">
+                      Dropped the book
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </section>
+          </div>
+        </article>
+      <% end %>
+    </div>
   </div>
 </div>
