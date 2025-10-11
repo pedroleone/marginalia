@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t lorekeeper .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name lorekeeper lorekeeper
+# docker build -t marginalia .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name marginalia marginalia
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
