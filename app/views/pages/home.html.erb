@@ -1,77 +1,15 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pb-16">
-  <% total_books = @library[:books].size %>
-  <% categories = @library[:books].map { |book| book[:category] }.compact.uniq %>
-  <% reading_methods = @library[:books].map { |book| book[:reading_method].to_s.capitalize }.uniq %>
-  <% tags = @library[:books].flat_map { |book| book[:tags] }.compact.uniq %>
-  <% completion_values = @library[:books].map do |book|
-    percent = book[:progress][:percent]
-    if percent
-      percent.to_f
-    else
-      current_page = book[:progress][:current_page].to_f
-      total_pages = book[:progress][:total_pages].to_f
-      total_pages.positive? ? (current_page / total_pages * 100) : 0.0
-    end
-  end %>
-  <% average_completion = completion_values.empty? ? 0 : (completion_values.sum / completion_values.size).round %>
-
   <div class="container mx-auto max-w-6xl px-6 pt-12">
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-      <div class="w-full lg:max-w-3xl">
-        <p class="text-sm font-semibold uppercase tracking-widest text-sky-500">
-          Good to see you
-        </p>
-        <h1 class="mt-2 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
-          Hello, <%= Current.session.user.email_address || "Reader" %>.
-        </h1>
-        <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
-          Slip in, jot a thought, and keep turning pages. Everything here is designed to respect your time and attention.
-        </p>
-      </div>
-      <div class="w-full rounded-2xl border border-slate-200 bg-white/70 p-5 text-sm text-slate-600 shadow-sm backdrop-blur lg:max-w-md">
-        <div class="flex items-center gap-3">
-          <span class="rounded-full bg-slate-900/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-            Reading snapshot
-          </span>
-          <p class="text-slate-500">A quiet overview of where you are right now.</p>
-        </div>
-        <div class="mt-4 space-y-3 text-slate-500">
-          <p>
-            <strong class="text-slate-800"><%= total_books %></strong>
-            <%= total_books == 1 ? "book" : "books" %> in progress,
-            averaging <strong class="text-slate-800"><%= average_completion %>%</strong> complete.
-          </p>
-          <% if categories.any? %>
-            <p>
-              Exploring
-              <strong class="text-slate-800"><%= categories.size %></strong>
-              <%= categories.size == 1 ? "category" : "categories" %>:
-              <%= categories.first(3).join(", ") %>
-              <% if categories.size > 3 %>
-                &hellip;
-              <% end %>
-            </p>
-          <% end %>
-          <% if reading_methods.any? %>
-            <p>
-              Formats on your desk:
-              <%= reading_methods.join(" · ") %>
-            </p>
-          <% end %>
-          <% if tags.any? %>
-            <p>
-              Themes you’re tracking:
-              <%= tags.first(4).join(", ") %>
-              <% if tags.size > 4 %>
-                &hellip;
-              <% end %>
-            </p>
-          <% end %>
-        </div>
-      </div>
-    </div>
+    <header class="mb-10">
+      <h1 class="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+        Quick capture
+      </h1>
+      <p class="mt-2 text-sm text-slate-500">
+        Update your current reads without breaking your flow.
+      </p>
+    </header>
 
-    <div class="mt-12 grid gap-10">
+    <div class="grid gap-10">
       <% @library[:books].each do |book| %>
         <% current_page = book[:progress][:current_page]
         total_pages = book[:progress][:total_pages]
@@ -172,15 +110,11 @@
 
 
             <!-- Update section -->
-            <section class="rounded-2xl border border-slate-100 bg-white/70 p-6 shadow-sm">
+            <section class="rounded-2xl border border-slate-100 bg-white/70 p-6 shadow-sm" data-controller="modal">
               <header class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p class="text-sm uppercase tracking-wide text-sky-500">
-                    Quick capture
-                  </p>
-                  <h3 class="text-lg font-semibold text-slate-900">
-                    Log today’s progress
-                  </h3>
+                  <p class="text-sm uppercase tracking-wide text-sky-500">Quick capture</p>
+                  <h3 class="text-lg font-semibold text-slate-900">Log today’s progress</h3>
                 </div>
                 <div class="flex items-center gap-2 text-xs text-slate-400">
                   <span>Estimated finish ·</span>
@@ -188,65 +122,225 @@
                 </div>
               </header>
 
-              <form class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr),320px]">
-                <div class="space-y-6">
-                  <!-- Note -->
-                  <div>
-                    <label for="note_<%= book[:id] %>" class="flex items-center justify-between text-sm font-medium text-slate-700">
-                      <span>Quick note</span>
-                      <span class="text-slate-400">Optional · 200 chars max</span>
-                    </label>
-                    <div class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
-                      <textarea id="note_<%= book[:id] %>" rows="3" maxlength="200" placeholder="A sentence about how it's going…" class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+              <form class="mt-6 space-y-6">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                  <div class="w-full lg:max-w-md">
+                    <label for="page_<%= book[:id] %>" class="text-sm font-medium text-slate-700">Current page</label>
+                    <div class="mt-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
+                      <input type="number" id="page_<%= book[:id] %>" min="1" max="<%= total_pages %>" value="<%= current_page %>" class="flex-1 border-0 bg-transparent text-lg font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+                      <span class="text-sm uppercase tracking-wide text-slate-400">of <%= total_pages %></span>
                     </div>
+                    <p class="mt-2 text-xs text-slate-500">We’ll keep percent at <span class="font-medium text-slate-700"><%= percent %>%</span> unless you change the page.</p>
                   </div>
-
-                  <!-- Sentiment -->
-                  <div>
-                    <p class="text-sm font-medium text-slate-700">How’s it going?</p>
-                    <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                      <% sentiments = [
-                        ["boring", "Boring"],
-                        ["meh", "Meh"],
-                        ["good", "Good"],
-                        ["interesting", "Interesting"],
-                        ["gripping", "Gripping"],
-                        ["thought-provoking", "Thought-provoking"],
-                        ["moving", "Moving"]
-                      ] %>
-                      <% sentiments.each do |value, label| %>
-                        <label class="group flex cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition hover:border-sky-200 hover:bg-sky-50">
-                          <span><%= label %></span>
-                          <input type="radio" name="sentiment_<%= book[:id] %>" value="<%= value %>" class="hidden peer" />
-                          <span class="hidden rounded-full bg-sky-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline group-hover:inline-flex">Selected</span>
-                        </label>
-                      <% end %>
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-full bg-sky-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition hover:bg-sky-400">Save update</button>
+                    <div data-controller="menu" class="relative inline-flex">
+                      <button type="button" data-menu-target="trigger" data-action="menu#toggle" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 transition hover:border-slate-300 hover:text-slate-700" aria-haspopup="true" aria-expanded="false">
+                        More
+                      </button>
+                      <div data-menu-target="panel" class="hidden absolute right-0 top-full z-20 mt-2 w-48 overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 text-sm text-slate-600 shadow-xl shadow-slate-900/10">
+                        <button type="button" data-action="menu#close modal#open" data-modal-name-param="finish" class="flex w-full items-center justify-between px-4 py-2 text-left transition hover:bg-slate-50">
+                          Finished reading
+                          <span class="text-xs uppercase tracking-wide text-emerald-400">Done</span>
+                        </button>
+                        <button type="button" data-action="menu#close modal#open" data-modal-name-param="drop" class="flex w-full items-center justify-between px-4 py-2 text-left transition hover:bg-slate-50">
+                          Dropped the book
+                          <span class="text-xs uppercase tracking-wide text-rose-400">Stop</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Quick actions -->
-                <div class="flex flex-col gap-5 rounded-2xl bg-slate-900/95 p-6 text-slate-200 shadow-lg shadow-slate-900/20">
-                  <div class="space-y-3">
-                    <label for="page_<%= book[:id] %>" class="text-sm font-medium text-slate-200">Current page</label>
-                    <div class="flex items-center gap-3 rounded-2xl bg-slate-800/70 px-4 py-3">
-                      <input type="number" id="page_<%= book[:id] %>" min="1" max="<%= total_pages %>" placeholder="<%= current_page %>" class="flex-1 border-0 bg-transparent text-lg font-semibold text-white placeholder:text-slate-500 focus:outline-none focus:ring-0" />
-                      <span class="text-sm uppercase tracking-wide text-slate-400">of <%= total_pages %></span>
+                <% sentiments = [
+                  ["boring", "Boring"],
+                  ["meh", "Meh"],
+                  ["good", "Good"],
+                  ["interesting", "Interesting"],
+                  ["gripping", "Gripping"],
+                  ["thought-provoking", "Thought-provoking"],
+                  ["moving", "Moving"]
+                ] %>
+                <div class="space-y-4">
+                  <div class="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-4">
+                    <input type="checkbox" id="note_toggle_<%= book[:id] %>" class="peer sr-only" />
+                    <label for="note_toggle_<%= book[:id] %>" class="flex cursor-pointer items-center justify-between text-sm font-medium text-slate-600">
+                      <span class="peer-checked:hidden">Add note</span>
+                      <span class="hidden peer-checked:inline text-slate-700">Hide note</span>
+                      <span class="inline-flex items-center rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 peer-checked:hidden">Optional</span>
+                    </label>
+                    <div class="mt-4 hidden peer-checked:block">
+                      <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
+                        <label for="note_<%= book[:id] %>" class="sr-only">Quick note for <%= book[:title] %></label>
+                        <textarea id="note_<%= book[:id] %>" rows="3" placeholder="A sentence about how it's going…" class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                      </div>
                     </div>
                   </div>
-                  <div class="grid gap-3">
-                    <button type="submit" class="inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-sky-500/40 transition hover:bg-sky-400">
-                      Save update
-                    </button>
-                    <button type="button" class="inline-flex items-center justify-center rounded-full bg-emerald-500/10 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-emerald-300 transition hover:bg-emerald-500/20 hover:text-emerald-200">
-                      Finished reading
-                    </button>
-                    <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-700 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-slate-300 transition hover:border-slate-500 hover:text-white">
-                      Dropped the book
-                    </button>
+
+                  <div class="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-4">
+                    <input type="checkbox" id="sentiment_toggle_<%= book[:id] %>" class="peer sr-only" />
+                    <label for="sentiment_toggle_<%= book[:id] %>" class="flex cursor-pointer items-center justify-between text-sm font-medium text-slate-600">
+                      <span class="peer-checked:hidden">Add sentiment</span>
+                      <span class="hidden peer-checked:inline text-slate-700">Hide sentiment</span>
+                      <span class="inline-flex items-center rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 peer-checked:hidden">Optional</span>
+                    </label>
+                    <div class="mt-4 hidden peer-checked:block" data-controller="sentiments" data-sentiments-name-value="sentiment_<%= book[:id] %>">
+                      <div class="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" data-sentiments-target="list">
+                        <% sentiments.each do |value, label| %>
+                          <label class="cursor-pointer">
+                            <input type="radio" name="sentiment_<%= book[:id] %>" value="<%= value %>" class="peer sr-only" data-action="change->sentiments#selectRadio" />
+                            <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition peer-checked:border-sky-300 peer-checked:bg-sky-50 peer-checked:text-slate-700 hover:border-sky-200 hover:bg-sky-50">
+                              <span><%= label %></span>
+                              <span class="hidden items-center rounded-full bg-sky-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline-flex">Selected</span>
+                            </div>
+                          </label>
+                        <% end %>
+                        <button type="button" data-sentiments-target="addButton" data-action="click->sentiments#openModal" class="flex items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-white/60 px-4 py-3 text-sm font-semibold uppercase tracking-wide text-slate-500 transition hover:border-sky-300 hover:bg-sky-50">
+                          <span>New sentiment</span>
+                        </button>
+                      </div>
+
+                      <div class="hidden fixed inset-0 z-50 items-center justify-center bg-slate-900/60 px-4 py-6" data-sentiments-target="modal" data-action="click->sentiments#background">
+                        <div class="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl shadow-slate-900/30" data-action="click->sentiments#stop">
+                          <div class="space-y-1">
+                            <h3 class="text-lg font-semibold text-slate-900">Add a new sentiment</h3>
+                            <p class="text-sm text-slate-500">Give this read its own mood in a few words.</p>
+                          </div>
+
+                          <div class="mt-5 space-y-4">
+                            <div>
+                              <label class="sr-only" for="custom_sentiment_<%= book[:id] %>">Custom sentiment for <%= book[:title] %></label>
+                              <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
+                                <input type="text" id="custom_sentiment_<%= book[:id] %>" placeholder="e.g. Mind-blowing" class="w-full border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0" data-sentiments-target="input" data-action="keydown.enter->sentiments#confirm" />
+                              </div>
+                              <p class="hidden mt-2 text-xs text-rose-500" data-sentiments-target="error"></p>
+                            </div>
+                            <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                              <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:border-slate-300 hover:text-slate-700" data-action="click->sentiments#closeModal">
+                                Cancel
+                              </button>
+                              <button type="button" class="inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition hover:bg-sky-400" data-action="click->sentiments#confirm">
+                                Save sentiment
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </form>
+
+              <div data-modal-target="overlay" data-modal-name="finish" class="hidden fixed inset-0 z-40 items-center justify-center bg-slate-900/60 px-4 py-6" data-action="click->modal#background">
+                <div class="w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl shadow-slate-900/20" data-action="click->modal#stop">
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <p class="text-xs font-semibold uppercase tracking-wide text-sky-500">Wrap it up</p>
+                      <h4 class="mt-1 text-xl font-semibold text-slate-900">Mark “<%= book[:title] %>” as finished</h4>
+                    </div>
+                    <button type="button" class="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-400 transition hover:border-slate-300 hover:text-slate-600" data-action="modal#close" data-modal-name-param="finish" aria-label="Close finished modal">
+                      &times;
+                    </button>
+                  </div>
+
+                  <div class="mt-6 space-y-6">
+                    <div>
+                      <label for="finish_note_<%= book[:id] %>" class="text-sm font-medium text-slate-700">What stood out?</label>
+                      <div class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
+                        <textarea id="finish_note_<%= book[:id] %>" rows="4" placeholder="Capture a takeaway, favorite quote, or how it landed." class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p class="text-sm font-medium text-slate-700">Final sentiment</p>
+                      <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+                        <% sentiments.each do |value, label| %>
+                          <label class="cursor-pointer">
+                            <input type="radio" name="finish_sentiment_<%= book[:id] %>" value="<%= value %>" class="peer sr-only" />
+                            <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition peer-checked:border-sky-300 peer-checked:bg-sky-50 peer-checked:text-slate-700 hover:border-sky-200 hover:bg-sky-50">
+                              <span><%= label %></span>
+                              <span class="hidden items-center rounded-full bg-sky-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline-flex">Selected</span>
+                            </div>
+                          </label>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-slate-500 transition hover:border-slate-300 hover:text-slate-700" data-action="modal#close" data-modal-name-param="finish">
+                      Not now
+                    </button>
+                    <button type="button" class="inline-flex items-center justify-center rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition hover:bg-emerald-400" data-action="modal#close" data-modal-name-param="finish">
+                      Confirm finish
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div data-modal-target="overlay" data-modal-name="drop" class="hidden fixed inset-0 z-40 items-center justify-center bg-slate-900/60 px-4 py-6" data-action="click->modal#background">
+                <div class="w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl shadow-slate-900/20" data-action="click->modal#stop">
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <p class="text-xs font-semibold uppercase tracking-wide text-rose-400">Taking a pause</p>
+                      <h4 class="mt-1 text-xl font-semibold text-slate-900">Drop “<%= book[:title] %>” for now</h4>
+                    </div>
+                    <button type="button" class="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-400 transition hover:border-slate-300 hover:text-slate-600" data-action="modal#close" data-modal-name-param="drop" aria-label="Close drop modal">
+                      &times;
+                    </button>
+                  </div>
+
+                  <div class="mt-6 space-y-6">
+                    <div>
+                      <label for="drop_note_<%= book[:id] %>" class="text-sm font-medium text-slate-700">What’s the context?</label>
+                      <div class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-rose-300 focus-within:ring-2 focus-within:ring-rose-100">
+                        <textarea id="drop_note_<%= book[:id] %>" rows="4" placeholder="Capture what’s not working or why you’re stepping away." class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p class="text-sm font-medium text-slate-700">How are you feeling about it?</p>
+                      <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+                        <% sentiments.each do |value, label| %>
+                          <label class="cursor-pointer">
+                            <input type="radio" name="drop_sentiment_<%= book[:id] %>" value="<%= value %>" class="peer sr-only" />
+                            <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition peer-checked:border-rose-300 peer-checked:bg-rose-50 peer-checked:text-slate-700 hover:border-rose-200 hover:bg-rose-50">
+                              <span><%= label %></span>
+                              <span class="hidden items-center rounded-full bg-rose-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline-flex">Selected</span>
+                            </div>
+                          </label>
+                        <% end %>
+                      </div>
+                    </div>
+
+                    <% return_options = [
+                      ["yes", "Yes, I’ll come back soon"],
+                      ["maybe", "Maybe, still deciding"],
+                      ["no", "No, I’m done with it"]
+                    ] %>
+                    <div>
+                      <p class="text-sm font-medium text-slate-700">Plan to return?</p>
+                      <div class="mt-3 space-y-2">
+                        <% return_options.each do |value, label| %>
+                          <label class="flex cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition hover:border-rose-200 hover:bg-rose-50">
+                            <span><%= label %></span>
+                            <input type="radio" name="drop_return_<%= book[:id] %>" value="<%= value %>" class="h-4 w-4 border border-slate-300 text-rose-500 focus:ring-rose-300" />
+                          </label>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-slate-500 transition hover:border-slate-300 hover:text-slate-700" data-action="modal#close" data-modal-name-param="drop">
+                      Keep reading
+                    </button>
+                    <button type="button" class="inline-flex items-center justify-center rounded-full bg-rose-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition hover:bg-rose-400" data-action="modal#close" data-modal-name-param="drop">
+                      Confirm drop
+                    </button>
+                  </div>
+                </div>
+              </div>
             </section>
           </div>
         </article>
