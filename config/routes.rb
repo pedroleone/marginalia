@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   root "pages#index"
-  get "home", to: "pages#home"
+  get "capture", to: "capture#index"
+  get "library", to: "library#index"
+  get "recommendations", to: "recommendations#index"
+  resource :profile, only: :show
 
 
   get  "signup", to: "registrations#new"

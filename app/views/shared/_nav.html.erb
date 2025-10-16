@@ -1,0 +1,164 @@
+<%# app/views/shared/_navbar.html.erb %>
+
+<% nav_links = [
+  { name: "Capture", path: capture_path, active: current_page?(capture_path) },
+  { name: "Library", path: library_path, active: current_page?(library_path) },
+  { name: "Recommendations", path: recommendations_path, active: current_page?(recommendations_path) }
+] %>
+
+<header class="border-b border-slate-200 bg-white/80 backdrop-blur" data-controller="mobile-nav">
+  <div class="container mx-auto px-5">
+    <nav aria-label="Primary"
+     class="flex items-center justify-between h-20 lg:h-auto xl:h-20 lg:grid lg:grid-cols-[auto_1fr_auto]">
+      <!-- Left: Logo + Brand -->
+      <div class="flex items-center justify-self-start">
+        <%= link_to root_path, class: "flex items-center gap-3 rounded-full px-4 py-2 transition hover:bg-slate-100 md:px-5 md:py-3" do %>
+          <%= image_tag "logo.png", alt: "Logo", class: "h-10 w-10" %>
+          <span class="text-lg font-semibold uppercase tracking-[0.3em] text-slate-700">
+            Marginalia
+          </span>
+        <% end %>
+      </div>
+
+      <!-- Center: Primary nav (desktop only, show only when authenticated) -->
+      <% if authenticated? %>
+        <div class="hidden lg:flex justify-center">
+          <ul class="flex flex-wrap items-center justify-center gap-1 rounded-full border border-slate-200 bg-white/70 px-2 py-1 text-sm font-medium text-slate-600 shadow-sm shadow-slate-900/5 xl:flex-nowrap">
+            <% nav_links.each do |link| %>
+              <% active = link[:active] %>
+              <li>
+                <%= link_to link[:name], link[:path],
+                      class: [
+                        "rounded-full px-4 py-2 transition whitespace-nowrap",
+                        (active ? "bg-sky-500 text-white shadow-sm shadow-sky-500/30" : "text-slate-500 hover:text-slate-700 hover:bg-slate-100")
+                      ].join(" "),
+                      aria: (active ? { current: "page" } : nil) %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% else %>
+        <div class="hidden lg:block"></div>
+      <% end %>
+
+      <!-- Right: Account actions (desktop) -->
+      <div class="hidden lg:flex justify-self-end items-center gap-3">
+        <% if authenticated? %>
+          <div class="flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-2 py-1 shadow-sm shadow-slate-900/5">
+            <%= link_to profile_path,
+                class: "rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition whitespace-nowrap hover:bg-slate-100 hover:text-slate-700" do %>
+              Profile & settings
+            <% end %>
+            <%= button_to "Sign out",
+                session_path,
+                method: :delete,
+                form: { class: "inline", data: { turbo: true } },
+                class: "rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-slate-900/30 transition whitespace-nowrap hover:bg-slate-700" %>
+          </div>
+        <% else %>
+          <%= link_to "Sign in",
+              new_session_path,
+              class: "rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition whitespace-nowrap hover:bg-slate-100 hover:text-slate-700" %>
+          <%= link_to "Create an account",
+              signup_path,
+              class: "rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-sky-500/30 transition whitespace-nowrap hover:bg-sky-400" %>
+        <% end %>
+      </div>
+
+      <!-- Mobile: Hamburger toggle -->
+      <div class="lg:hidden">
+        <button
+          id="mobile-nav-toggle"
+          type="button"
+          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/80 p-3 text-slate-600 shadow-sm shadow-slate-900/5 transition hover:bg-slate-100 hover:text-slate-900"
+          aria-controls="mobile-nav-panel"
+          aria-expanded="false"
+          data-action="click->mobile-nav#toggle"
+          data-mobile-nav-target="toggle"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <!-- Icon: open -->
+          <svg
+            data-menu-icon="open"
+            data-mobile-nav-target="openIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-5 w-5"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+          <!-- Icon: close -->
+          <svg
+            data-menu-icon="close"
+            data-mobile-nav-target="closeIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="hidden h-5 w-5"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile navigation (collapsible; controlled by your JS) -->
+  <div id="mobile-nav-panel" class="hidden lg:hidden" data-mobile-nav-target="panel">
+    <div class="border-t border-slate-200 bg-white/95 px-5 pb-4 pt-3 shadow-inner shadow-slate-900/5">
+      <% if authenticated? %>
+        <nav aria-label="Mobile primary">
+          <ul class="space-y-1 text-sm font-medium text-slate-600">
+            <% nav_links.each do |link| %>
+              <li>
+                <%= link_to link[:name], link[:path],
+                      class: [
+                        "flex items-center justify-between rounded-lg px-4 py-3 transition hover:bg-slate-100 hover:text-slate-900",
+                        (link[:active] ? "bg-slate-100 text-slate-900" : nil)
+                      ].compact.join(" "),
+                      aria: (link[:active] ? { current: "page" } : nil) %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      <% end %>
+
+      <div class="mt-4 border-t border-slate-200 pt-4">
+        <% if authenticated? %>
+          <div class="space-y-2 text-sm font-medium text-slate-600">
+            <%= link_to profile_path,
+                class: "block rounded-lg border border-slate-200 px-4 py-3 transition hover:bg-slate-100 hover:text-slate-900" do %>
+              Profile & settings
+            <% end %>
+            <%= button_to "Sign out",
+                session_path,
+                method: :delete,
+                form: { class: "mt-2", data: { turbo: true } },
+                class: "w-full rounded-lg bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm shadow-slate-900/30 transition hover:bg-slate-700" %>
+          </div>
+        <% else %>
+          <div class="space-y-2 text-sm font-medium text-slate-600">
+            <%= link_to "Sign in",
+                new_session_path,
+                class: "block rounded-lg border border-slate-200 px-4 py-3 transition hover:bg-slate-100 hover:text-slate-900" %>
+            <%= link_to "Create an account",
+                signup_path,
+                class: "block rounded-lg bg-sky-500 px-4 py-3 text-center font-semibold text-white shadow-sm shadow-sky-500/30 transition hover:bg-sky-400" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</header>

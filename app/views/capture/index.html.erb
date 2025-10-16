@@ -10,44 +10,43 @@
     </header>
 
     <div class="grid gap-10">
-      <% @library[:books].each do |book| %>
-        <% current_page = book[:progress][:current_page]
-        total_pages = book[:progress][:total_pages]
-        percent =
-          (book[:progress][:percent] || (current_page.to_f / total_pages * 100)).round
-        tags = Array(book[:tags]).compact %>
+      <% @books.each do |book| %>
+        <% current_page = book.current_page
+        total_pages = book.total_pages
+        percent = book.percent_complete
+        tags = book.tags %>
 
         <article class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 ring-1 ring-slate-200">
           <div class="space-y-10 p-6 md:p-8">
             <div class="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
               <!-- Summary -->
               <div class="flex flex-col gap-6 md:flex-row md:items-start">
-                <div class="w-full max-w-[180px] overflow-hidden rounded-2xl shadow-lg shadow-slate-900/10">
+                <div class="w-full max-w-[180px] shrink-0 overflow-hidden rounded-2xl shadow-lg shadow-slate-900/10">
                   <div class="aspect-[2/3]">
-                    <img src="<%= book[:cover_url] %>" alt="<%= "#{book[:title]} cover" %>" class="h-full w-full object-cover object-center" />
+                    <img src="<%= book.cover_url %>" alt="<%= "#{book.title} cover" %>" class="h-full w-full object-cover object-center" />
                   </div>
                 </div>
 
                 <div class="flex-1 space-y-5">
                   <div class="space-y-2">
                     <h2 class="text-2xl font-semibold leading-tight text-slate-900 md:text-3xl">
-                      <%= book[:title] %>
+                      <%= book.title %>
                     </h2>
                     <p class="text-sm uppercase tracking-wide text-slate-500">
-                      <%= book[:author] %>
+                      <%= book.author %>
                     </p>
                   </div>
 
                   <p class="text-base italic text-slate-600 md:text-lg">
-                    <%= book[:pace_phrase] %>
+                    <%= book.pace_phrase %>
                   </p>
 
                   <div class="flex flex-wrap gap-2">
                     <span class="inline-flex items-center rounded-full bg-slate-900/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-                      <%= book[:category] %>
+                      <%= book.category %>
                     </span>
                     <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      <%= book[:reading_method].to_s.capitalize %>
+                      <%= book.reading_method.to_s.capitalize %>
                     </span>
                   </div>
 
@@ -90,7 +89,7 @@
                     <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">
                       Days with this book
                     </p>
-                    <p class="mt-2 text-3xl font-semibold text-slate-900"><%= book[:days_reading] %></p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900"><%= book.days_reading %></p>
                     <p class="text-sm text-slate-500">
                       Steady momentum makes the story stick.
                     </p>
@@ -99,7 +98,7 @@
                     <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">
                       Estimated finish
                     </p>
-                    <p class="mt-2 text-3xl font-semibold text-slate-900"><%= book[:estimated_days_to_finish] %> days</p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900"><%= book.estimated_days_to_finish %> days</p>
                     <p class="text-sm text-slate-500">
                       Keep your pace or adjust as needed.
                     </p>
@@ -118,16 +117,16 @@
                 </div>
                 <div class="flex items-center gap-2 text-xs text-slate-400">
                   <span>Estimated finish ·</span>
-                  <span><%= book[:estimated_days_to_finish] %> days</span>
+                  <span><%= book.estimated_days_to_finish %> days</span>
                 </div>
               </header>
 
               <form class="mt-6 space-y-6">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                   <div class="w-full lg:max-w-md">
-                    <label for="page_<%= book[:id] %>" class="text-sm font-medium text-slate-700">Current page</label>
+                    <label for="page_<%= book.id %>" class="text-sm font-medium text-slate-700">Current page</label>
                     <div class="mt-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
-                      <input type="number" id="page_<%= book[:id] %>" min="1" max="<%= total_pages %>" value="<%= current_page %>" class="flex-1 border-0 bg-transparent text-lg font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+                      <input type="number" id="page_<%= book.id %>" min="1" max="<%= total_pages %>" value="<%= current_page %>" class="flex-1 border-0 bg-transparent text-lg font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
                       <span class="text-sm uppercase tracking-wide text-slate-400">of <%= total_pages %></span>
                     </div>
                     <p class="mt-2 text-xs text-slate-500">We’ll keep percent at <span class="font-medium text-slate-700"><%= percent %>%</span> unless you change the page.</p>
@@ -163,32 +162,32 @@
                 ] %>
                 <div class="space-y-4">
                   <div class="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-4">
-                    <input type="checkbox" id="note_toggle_<%= book[:id] %>" class="peer sr-only" />
-                    <label for="note_toggle_<%= book[:id] %>" class="flex cursor-pointer items-center justify-between text-sm font-medium text-slate-600">
+                    <input type="checkbox" id="note_toggle_<%= book.id %>" class="peer sr-only" />
+                    <label for="note_toggle_<%= book.id %>" class="flex cursor-pointer items-center justify-between text-sm font-medium text-slate-600">
                       <span class="peer-checked:hidden">Add note</span>
                       <span class="hidden peer-checked:inline text-slate-700">Hide note</span>
                       <span class="inline-flex items-center rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 peer-checked:hidden">Optional</span>
                     </label>
                     <div class="mt-4 hidden peer-checked:block">
                       <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
-                        <label for="note_<%= book[:id] %>" class="sr-only">Quick note for <%= book[:title] %></label>
-                        <textarea id="note_<%= book[:id] %>" rows="3" placeholder="A sentence about how it's going…" class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                        <label for="note_<%= book.id %>" class="sr-only">Quick note for <%= book.title %></label>
+                        <textarea id="note_<%= book.id %>" rows="3" placeholder="A sentence about how it's going…" class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
                       </div>
                     </div>
                   </div>
 
                   <div class="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-4">
-                    <input type="checkbox" id="sentiment_toggle_<%= book[:id] %>" class="peer sr-only" />
-                    <label for="sentiment_toggle_<%= book[:id] %>" class="flex cursor-pointer items-center justify-between text-sm font-medium text-slate-600">
+                    <input type="checkbox" id="sentiment_toggle_<%= book.id %>" class="peer sr-only" />
+                    <label for="sentiment_toggle_<%= book.id %>" class="flex cursor-pointer items-center justify-between text-sm font-medium text-slate-600">
                       <span class="peer-checked:hidden">Add sentiment</span>
                       <span class="hidden peer-checked:inline text-slate-700">Hide sentiment</span>
                       <span class="inline-flex items-center rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 peer-checked:hidden">Optional</span>
                     </label>
-                    <div class="mt-4 hidden peer-checked:block" data-controller="sentiments" data-sentiments-name-value="sentiment_<%= book[:id] %>">
+                    <div class="mt-4 hidden peer-checked:block" data-controller="sentiments" data-sentiments-name-value="sentiment_<%= book.id %>">
                       <div class="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" data-sentiments-target="list">
                         <% sentiments.each do |value, label| %>
                           <label class="cursor-pointer">
-                            <input type="radio" name="sentiment_<%= book[:id] %>" value="<%= value %>" class="peer sr-only" data-action="change->sentiments#selectRadio" />
+                            <input type="radio" name="sentiment_<%= book.id %>" value="<%= value %>" class="peer sr-only" data-action="change->sentiments#selectRadio" />
                             <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition peer-checked:border-sky-300 peer-checked:bg-sky-50 peer-checked:text-slate-700 hover:border-sky-200 hover:bg-sky-50">
                               <span><%= label %></span>
                               <span class="hidden items-center rounded-full bg-sky-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline-flex">Selected</span>
@@ -209,9 +208,9 @@
 
                           <div class="mt-5 space-y-4">
                             <div>
-                              <label class="sr-only" for="custom_sentiment_<%= book[:id] %>">Custom sentiment for <%= book[:title] %></label>
+                              <label class="sr-only" for="custom_sentiment_<%= book.id %>">Custom sentiment for <%= book.title %></label>
                               <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
-                                <input type="text" id="custom_sentiment_<%= book[:id] %>" placeholder="e.g. Mind-blowing" class="w-full border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0" data-sentiments-target="input" data-action="keydown.enter->sentiments#confirm" />
+                                <input type="text" id="custom_sentiment_<%= book.id %>" placeholder="e.g. Mind-blowing" class="w-full border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0" data-sentiments-target="input" data-action="keydown.enter->sentiments#confirm" />
                               </div>
                               <p class="hidden mt-2 text-xs text-rose-500" data-sentiments-target="error"></p>
                             </div>
@@ -236,7 +235,7 @@
                   <div class="flex items-start justify-between gap-4">
                     <div>
                       <p class="text-xs font-semibold uppercase tracking-wide text-sky-500">Wrap it up</p>
-                      <h4 class="mt-1 text-xl font-semibold text-slate-900">Mark “<%= book[:title] %>” as finished</h4>
+                      <h4 class="mt-1 text-xl font-semibold text-slate-900">Mark “<%= book.title %>” as finished</h4>
                     </div>
                     <button type="button" class="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-400 transition hover:border-slate-300 hover:text-slate-600" data-action="modal#close" data-modal-name-param="finish" aria-label="Close finished modal">
                       &times;
@@ -245,9 +244,9 @@
 
                   <div class="mt-6 space-y-6">
                     <div>
-                      <label for="finish_note_<%= book[:id] %>" class="text-sm font-medium text-slate-700">What stood out?</label>
+                      <label for="finish_note_<%= book.id %>" class="text-sm font-medium text-slate-700">What stood out?</label>
                       <div class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-sky-300 focus-within:ring-2 focus-within:ring-sky-100">
-                        <textarea id="finish_note_<%= book[:id] %>" rows="4" placeholder="Capture a takeaway, favorite quote, or how it landed." class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                        <textarea id="finish_note_<%= book.id %>" rows="4" placeholder="Capture a takeaway, favorite quote, or how it landed." class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
                       </div>
                     </div>
 
@@ -256,7 +255,7 @@
                       <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
                         <% sentiments.each do |value, label| %>
                           <label class="cursor-pointer">
-                            <input type="radio" name="finish_sentiment_<%= book[:id] %>" value="<%= value %>" class="peer sr-only" />
+                            <input type="radio" name="finish_sentiment_<%= book.id %>" value="<%= value %>" class="peer sr-only" />
                             <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition peer-checked:border-sky-300 peer-checked:bg-sky-50 peer-checked:text-slate-700 hover:border-sky-200 hover:bg-sky-50">
                               <span><%= label %></span>
                               <span class="hidden items-center rounded-full bg-sky-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline-flex">Selected</span>
@@ -283,7 +282,7 @@
                   <div class="flex items-start justify-between gap-4">
                     <div>
                       <p class="text-xs font-semibold uppercase tracking-wide text-rose-400">Taking a pause</p>
-                      <h4 class="mt-1 text-xl font-semibold text-slate-900">Drop “<%= book[:title] %>” for now</h4>
+                      <h4 class="mt-1 text-xl font-semibold text-slate-900">Drop “<%= book.title %>” for now</h4>
                     </div>
                     <button type="button" class="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-400 transition hover:border-slate-300 hover:text-slate-600" data-action="modal#close" data-modal-name-param="drop" aria-label="Close drop modal">
                       &times;
@@ -292,9 +291,9 @@
 
                   <div class="mt-6 space-y-6">
                     <div>
-                      <label for="drop_note_<%= book[:id] %>" class="text-sm font-medium text-slate-700">What’s the context?</label>
+                      <label for="drop_note_<%= book.id %>" class="text-sm font-medium text-slate-700">What’s the context?</label>
                       <div class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:border-rose-300 focus-within:ring-2 focus-within:ring-rose-100">
-                        <textarea id="drop_note_<%= book[:id] %>" rows="4" placeholder="Capture what’s not working or why you’re stepping away." class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
+                        <textarea id="drop_note_<%= book.id %>" rows="4" placeholder="Capture what’s not working or why you’re stepping away." class="w-full resize-none border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"></textarea>
                       </div>
                     </div>
 
@@ -303,7 +302,7 @@
                       <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
                         <% sentiments.each do |value, label| %>
                           <label class="cursor-pointer">
-                            <input type="radio" name="drop_sentiment_<%= book[:id] %>" value="<%= value %>" class="peer sr-only" />
+                            <input type="radio" name="drop_sentiment_<%= book.id %>" value="<%= value %>" class="peer sr-only" />
                             <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition peer-checked:border-rose-300 peer-checked:bg-rose-50 peer-checked:text-slate-700 hover:border-rose-200 hover:bg-rose-50">
                               <span><%= label %></span>
                               <span class="hidden items-center rounded-full bg-rose-500 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-white peer-checked:inline-flex">Selected</span>
@@ -324,7 +323,7 @@
                         <% return_options.each do |value, label| %>
                           <label class="flex cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-medium text-slate-600 shadow-sm transition hover:border-rose-200 hover:bg-rose-50">
                             <span><%= label %></span>
-                            <input type="radio" name="drop_return_<%= book[:id] %>" value="<%= value %>" class="h-4 w-4 border border-slate-300 text-rose-500 focus:ring-rose-300" />
+                            <input type="radio" name="drop_return_<%= book.id %>" value="<%= value %>" class="h-4 w-4 border border-slate-300 text-rose-500 focus:ring-rose-300" />
                           </label>
                         <% end %>
                       </div>

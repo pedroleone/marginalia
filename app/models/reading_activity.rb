@@ -1,0 +1,2 @@
+class ReadingActivity
+end

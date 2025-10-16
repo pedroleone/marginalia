@@ -28,64 +28,7 @@
   </head>
 
   <body class="min-h-screen bg-slate-50 text-slate-900">
-    <!-- Navbar -->
-    <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
-      <% if authenticated? %>
-        <% nav_links = [
-          { name: "Quick capture", path: root_path, active: current_page?(root_path) },
-          { name: "Library shelves", path: "#library" },
-          { name: "Reading queue", path: "#queue" },
-          { name: "Smart picks", path: "#smart-picks" }
-        ] %>
-      <% end %>
-
-      <div class="container mx-auto flex h-20 items-center justify-between gap-6 px-5">
-        <!-- Logo + Brand -->
-        <%= link_to root_path, class: "flex items-center gap-3 rounded-full px-3 py-2 transition hover:bg-slate-100" do %>
-          <%= image_tag "logo.png", alt: "Logo", class: "h-10 w-10" %>
-          <span class="text-lg font-semibold uppercase tracking-[0.3em] text-slate-700">
-            Marginalia
-          </span>
-        <% end %>
-
-        <!-- Navigation -->
-        <nav aria-label="Primary" class="hidden items-center gap-1 rounded-full border border-slate-200 bg-white/70 px-2 py-1 text-sm font-medium text-slate-600 shadow-sm shadow-slate-900/5 md:flex">
-          <% if authenticated? %>
-            <% nav_links.each do |link| %>
-              <% active = link[:active] ? "bg-sky-500 text-white shadow-sm shadow-sky-500/30" : "text-slate-500 hover:text-slate-700 hover:bg-slate-100" %>
-              <%= link_to link[:name], link[:path], class: "rounded-full px-4 py-2 transition #{active}" %>
-            <% end %>
-          <% end %>
-        </nav>
-
-        <!-- Account actions -->
-        <div class="flex items-center gap-3">
-          <% if authenticated? %>
-            <div class="flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-2 py-1 shadow-sm shadow-slate-900/5">
-              <%= link_to "#profile",
-                  class: "rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-700" do %>
-                Profile & settings
-              <% end %>
-              <%= button_to "Sign out",
-                  session_path,
-                  method: :delete,
-                  form: {
-                    class: "inline",
-                    data: { turbo: true }
-                  },
-                  class: "rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-slate-900/30 transition hover:bg-slate-700" %>
-            </div>
-          <% else %>
-            <%= link_to "Sign in",
-                new_session_path,
-                class: "rounded-full px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-700" %>
-            <%= link_to "Create an account",
-                signup_path,
-                class: "rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-sky-500/30 transition hover:bg-sky-400" %>
-          <% end %>
-        </div>
-      </div>
-    </header>
+    <%= render "shared/nav" %>
     <!-- Flash (before content) -->
     <section class="mt-4">
       <%= render "shared/flash" %>
@@ -94,5 +37,6 @@
     <main class="container mx-auto px-5 ">
       <%= yield %>
     </main>
+
   </body>
 </html>

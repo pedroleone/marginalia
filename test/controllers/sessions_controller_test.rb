@@ -30,13 +30,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "successful sign in returns to stored location" do
-    get home_url
+    get capture_url
     assert_redirected_to new_session_url
-    assert_equal home_url, session[:return_to_after_authenticating]
+    assert_equal capture_url, session[:return_to_after_authenticating]
 
     post session_url, params: { email_address: @user.email_address, password: "password" }
 
-    assert_redirected_to home_url
+    assert_redirected_to capture_url
     assert_nil session[:return_to_after_authenticating]
   end
 
